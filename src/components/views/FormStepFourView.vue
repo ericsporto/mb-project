@@ -1,15 +1,17 @@
 <script setup lang="js">
-import {ref, defineEmits, onBeforeMount} from 'vue'
+import {onBeforeMount} from 'vue'
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 import InputComponent from '@/components/InputComponent.vue';
 import ButtonSpinnerComponent from '@/components/ButtonSpinnerComponent.vue'
 import {stepFourLogic} from '../../composable/stepFour/logic'
+import handleRegister from '@/requests/register'
+import handleGetRegister from '@/requests/getRegister'
 
 const {handleInputChange,
     isLegalPerson,
     isNormalPerson,
-    name,
+    legalName,
     socialName,
     cpf,
     cnpj,
@@ -19,7 +21,7 @@ const {handleInputChange,
     birthOpened,
     phoneLegal,
     phoneSocial,
-    isNameValid,
+    isLegalNameValid,
     isSocialNameValid,
     isCpfValid,
     isCnpjValid,
@@ -36,7 +38,7 @@ const emit = defineEmits(['stepChange', 'stepChangeBack']);
 onBeforeMount(() => {
   password.value = localStorage.getItem('password') || ''
   email.value = localStorage.getItem('email') || ''
-  name.value = localStorage.getItem('name') || ''
+  legalName.value = localStorage.getItem('legalName') || ''
   socialName.value = localStorage.getItem('socialName') || ''
   cpf.value = localStorage.getItem('cpf') || ''
   cnpj.value = localStorage.getItem('cnpj') || ''
@@ -63,8 +65,8 @@ const onSubmitLegal = async () => {
     isPasswordValid.value = true;
     return;
   }
-    if (!socialName.value) {
-      isSocialNameValid.value = true;
+    if (!legalName.value) {
+      isLegalNameValid.value = true;
       return;
     }
     if (!cnpj.value) {
@@ -80,13 +82,29 @@ const onSubmitLegal = async () => {
       return
     }
     isLoading.value = true
+    isLoading.value = true
     try{
+      const payload = {
+        email: email.value,
+        legal_name: legalName.value,
+        cnpj: cnpj.value,
+        birth_opened: birthOpened.value,
+        legal_phone: phoneLegal.value,
+        password: password.value,
+        is_legal: true
+      };
 
-    }catch{
-      isLoading.value = false
-    }
-  localStorage.clear()
-  emit('stepChange');
+        const response = await handleRegister(payload);
+        if(response){
+          await handleGetRegister()
+          isLoading.value = false
+          localStorage.clear()
+          emit('stepChange')
+        }
+      }catch{
+        isLoading.value = false
+        window.alert('Erro ao efetuar cadastro. Tente novamente')
+        }
 };
 
 const onSubmitNormal = async () => {
@@ -98,8 +116,8 @@ const onSubmitNormal = async () => {
     isPasswordValid.value = true;
     return;
   }
-    if (!name.value) {
-      isNameValid.value = true;
+    if (!socialName.value) {
+      isSocialNameValid.value = true;
       return;
     }
     if (!cpf.value) {
@@ -115,20 +133,33 @@ const onSubmitNormal = async () => {
     return
   }
   isLoading.value = true
-    try{
-
-    }catch{
-      isLoading.value = false
-    }
-
-  localStorage.clear()
-  emit('stepChange');
+  try{
+      const payload = {
+        email: email.value,
+        social_name: socialName.value,
+        cpf: cpf.value,
+        birth_date: birthDate.value,
+        social_phone: phoneSocial.value,
+        password: password.value
+      };
+        const response = await handleRegister(payload);
+        if(response){
+          window.alert(response.message)
+          await handleGetRegister()
+          isLoading.value = false
+          localStorage.clear()
+          emit('stepChange')
+        }
+      }catch(error){
+        isLoading.value = false
+        window.alert('Erro ao efetuar cadastro. Tente novamente')
+        }
 };
 </script>
 
 <template>
   <main class="main-container">
-    <form>
+    <form @submit.prevent="onSubmit">
       <HeaderComponent :step="4" title="Revise suas informações" />
       <div class="step-four-container">
         <InputComponent
@@ -145,14 +176,14 @@ const onSubmitNormal = async () => {
           :label="isLegalPerson ? 'Razão social' : 'Nome'"
           type="text"
           :required="false"
-          :id="isLegalPerson ? 'socialName' : 'name'"
+          :id="isLegalPerson ? 'legalName' : 'socialName'"
           @input="
             (event) =>
-              handleInputChange(event, isLegalPerson ? 'socialName' : 'name')
+              handleInputChange(event, isLegalPerson ? 'legalName' : 'socialName')
           "
-          :value="isLegalPerson ? socialName : name"
+          :value="isLegalPerson ? legalName : socialName"
           alertMessage="This field is required."
-          :hasAlert="isLegalPerson ? isSocialNameValid : isNameValid"
+          :hasAlert="isLegalPerson ? isSocialNameValid : isLegalNameValid"
         />
         <InputComponent
           :label="isLegalPerson ? 'CNPJ' : 'CPF'"

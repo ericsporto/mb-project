@@ -3,7 +3,7 @@ import { ref } from 'vue';
 const stepTwoLogic = () => {
   const isLegalPerson = ref(false);
   const isNormalPerson = ref(false);
-  const name = ref('');
+  const legalName = ref('');
   const socialName = ref('');
   const cpf = ref('');
   const cnpj = ref('');
@@ -12,7 +12,7 @@ const stepTwoLogic = () => {
   const phoneLegal = ref('');
   const phoneSocial = ref('');
 
-  const isNameValid = ref(false);
+  const isLegalNameValid = ref(false);
   const isSocialNameValid = ref(false);
   const isCpfValid = ref(false);
   const isCnpjValid = ref(false);
@@ -22,7 +22,7 @@ const stepTwoLogic = () => {
   const isPhoneSocialValid = ref(false);
 
   const inputMappings = {
-    name: name,
+    legalName: legalName,
     socialName: socialName,
     cpf: cpf,
     cnpj: cnpj,
@@ -44,7 +44,7 @@ const stepTwoLogic = () => {
     handleInputChange,
     isLegalPerson,
     isNormalPerson,
-    name,
+    legalName,
     socialName,
     cpf,
     cnpj,
@@ -52,7 +52,7 @@ const stepTwoLogic = () => {
     birthOpened,
     phoneLegal,
     phoneSocial,
-    isNameValid,
+    isLegalNameValid,
     isSocialNameValid,
     isCpfValid,
     isCnpjValid,

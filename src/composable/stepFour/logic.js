@@ -5,7 +5,7 @@ const stepFourLogic = () => {
     const isNormalPerson = ref(false)
     const email = ref('');
     const password = ref('')
-    const name = ref('');
+    const legalName = ref('');
     const socialName = ref('');
     const cpf = ref('');
     const cnpj = ref('');
@@ -15,7 +15,7 @@ const stepFourLogic = () => {
     const phoneSocial = ref('');
     const isLoading = ref(false)
 
-    const isNameValid = ref(false);
+    const isLegalNameValid = ref(false);
     const isSocialNameValid = ref(false);
     const isCpfValid = ref(false);
     const isCnpjValid = ref(false);
@@ -29,7 +29,7 @@ const stepFourLogic = () => {
     const inputMappings = {
         email:email,
         password:password,
-        name: name,
+        legalName: legalName,
         socialName: socialName,
         cpf: cpf,
         cnpj: cnpj,
@@ -51,7 +51,7 @@ const stepFourLogic = () => {
     handleInputChange,
     isLegalPerson,
     isNormalPerson,
-    name,
+    legalName,
     email,
     password,
     socialName,
@@ -61,7 +61,7 @@ const stepFourLogic = () => {
     birthOpened,
     phoneLegal,
     phoneSocial,
-    isNameValid,
+    isLegalNameValid,
     isSocialNameValid,
     isCpfValid,
     isCnpjValid,

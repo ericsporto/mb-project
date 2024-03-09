@@ -1,5 +1,5 @@
 <script setup lang="js">
-import {ref, defineEmits, onBeforeMount} from 'vue'
+import {ref, onBeforeMount} from 'vue'
 import ButtonComponent from '../ButtonComponent.vue';
 import HeaderComponent from '../HeaderComponent.vue';
 import InputComponent from '../InputComponent.vue';

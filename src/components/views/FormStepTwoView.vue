@@ -1,5 +1,5 @@
 <script setup lang="js">
-import {ref, defineEmits, onBeforeMount} from 'vue'
+import {onBeforeMount} from 'vue'
 import ButtonComponent from '../ButtonComponent.vue';
 import HeaderComponent from '../HeaderComponent.vue';
 import InputComponent from '../InputComponent.vue';
@@ -8,7 +8,7 @@ import {stepTwoLogic} from '../../composable/stepTwo/logic'
 const {handleInputChange,
     isLegalPerson,
     isNormalPerson,
-    name,
+    legalName,
     socialName,
     cpf,
     cnpj,
@@ -16,7 +16,7 @@ const {handleInputChange,
     birthOpened,
     phoneLegal,
     phoneSocial,
-    isNameValid,
+    isLegalNameValid,
     isSocialNameValid,
     isCpfValid,
     isCnpjValid,
@@ -28,7 +28,7 @@ const {handleInputChange,
 const emit = defineEmits(['stepChange', 'stepChangeBack']);
 
 onBeforeMount(() => {
-  name.value = localStorage.getItem('name') || ''
+  legalName.value = localStorage.getItem('legalName') || ''
   socialName.value = localStorage.getItem('socialName') || ''
   cpf.value = localStorage.getItem('cpf') || ''
   cnpj.value = localStorage.getItem('cnpj') || ''
@@ -47,8 +47,8 @@ if(isLegal === 'false'){
 });
 
 const onSubmitLegal = async () => {
-    if (!socialName.value) {
-      isSocialNameValid.value = true;
+    if (!legalName.value) {
+      isLegalNameValid.value = true;
       return;
     }
     if (!cnpj.value) {
@@ -63,7 +63,7 @@ const onSubmitLegal = async () => {
       isPhoneLegalValid.value = true
       return
     }
-  localStorage.setItem('socialName', socialName.value)
+  localStorage.setItem('legalName', legalName.value)
   localStorage.setItem('cnpj', cnpj.value)
   localStorage.setItem('birthOpened', birthOpened.value)
   localStorage.setItem('phoneLegal', phoneLegal.value)
@@ -71,8 +71,8 @@ const onSubmitLegal = async () => {
 };
 
 const onSubmitNormal = async () => {
-    if (!name.value) {
-      isNameValid.value = true;
+    if (!socialName.value) {
+      isSocialNameValid.value = true;
       return;
     }
     if (!cpf.value) {
@@ -88,7 +88,7 @@ const onSubmitNormal = async () => {
     return
   }
 
-  localStorage.setItem('name', name.value)
+  localStorage.setItem('socialName', socialName.value)
   localStorage.setItem('cpf', cpf.value)
   localStorage.setItem('birthDate', birthDate.value)
   localStorage.setItem('phoneSocial', phoneSocial.value)
@@ -108,14 +108,14 @@ const onSubmitNormal = async () => {
           :label="isLegalPerson ? 'Razão social' : 'Nome'"
           type="text"
           :required="false"
-          :id="isLegalPerson ? 'socialName' : 'name'"
+          :id="isLegalPerson ? 'legalName' : 'socialName'"
           @input="
             (event) =>
-              handleInputChange(event, isLegalPerson ? 'socialName' : 'name')
+              handleInputChange(event, isLegalPerson ? 'legalName' : 'socialName')
           "
-          :value="isLegalPerson ? socialName : name"
+          :value="isLegalPerson ? legalName : socialName"
           alertMessage="This field is required."
-          :hasAlert="isLegalPerson ? isSocialNameValid : isNameValid"
+          :hasAlert="isLegalPerson ? isLegalNameValid : isSocialNameValid"
         />
         <InputComponent
           :label="isLegalPerson ? 'CNPJ' : 'CPF'"
