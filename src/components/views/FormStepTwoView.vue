@@ -1,4 +1,4 @@
-<script setup lang="js">
+<script setup>
 import {onBeforeMount} from 'vue'
 import ButtonComponent from '../ButtonComponent.vue';
 import HeaderComponent from '../HeaderComponent.vue';

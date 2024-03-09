@@ -1,12 +1,13 @@
-<script setup lang="js">
+<script setup>
 import {onBeforeMount} from 'vue'
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 import InputComponent from '@/components/InputComponent.vue';
 import ButtonSpinnerComponent from '@/components/ButtonSpinnerComponent.vue'
 import {stepFourLogic} from '../../composable/stepFour/logic'
-import handleRegister from '@/requests/register'
 import handleGetRegister from '@/requests/getRegister'
+import handleRegisterSocial from '@/requests/registerSocial';
+import handleRegisterLegal from '@/requests/registerLegal';
 
 const {handleInputChange,
     isLegalPerson,
@@ -91,11 +92,11 @@ const onSubmitLegal = async () => {
         birth_opened: birthOpened.value,
         legal_phone: phoneLegal.value,
         password: password.value,
-        is_legal: true
       };
 
-        const response = await handleRegister(payload);
+        const response = await handleRegisterLegal(payload);
         if(response){
+          window.alert(response.message)
           await handleGetRegister()
           isLoading.value = false
           localStorage.clear()
@@ -142,7 +143,7 @@ const onSubmitNormal = async () => {
         social_phone: phoneSocial.value,
         password: password.value
       };
-        const response = await handleRegister(payload);
+        const response = await handleRegisterSocial(payload);
         if(response){
           window.alert(response.message)
           await handleGetRegister()

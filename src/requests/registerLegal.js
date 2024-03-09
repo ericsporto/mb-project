@@ -1,5 +1,5 @@
-const handleRegister = async (data) => {
-    const url = 'http://localhost:3000/registration'
+const handleRegisterLegal = async (data) => {
+    const url = 'http://localhost:3000/registration/legal'
 
     try {
       const response = await fetch(url, {
@@ -20,4 +20,4 @@ const handleRegister = async (data) => {
     }
   }
 
-  export default handleRegister;
+  export default handleRegisterLegal;
