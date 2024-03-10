@@ -61,6 +61,7 @@ app.get('/registration', (req, res) => {
   const htmlSocial = `
     <html>
       <head>
+      <link rel="icon" href="/favicon.png">
         <title>Detalhes do Registro</title>
       </head>
       <body>
@@ -77,6 +78,7 @@ app.get('/registration', (req, res) => {
   const htmlLegal = `
     <html>
       <head>
+      <link rel="icon" href="/favicon.png">
         <title>Detalhes do Registro</title>
       </head>
       <body>
