@@ -37,7 +37,7 @@ const onSubmit = async () => {
         id="password"
         @input="handleInputChange"
         :value="password"
-        alertMessage="This field is required."
+        alertMessage="Precisamos de uma senha."
         :hasAlert="isPasswordValid"
       />
       <div class="button-container">

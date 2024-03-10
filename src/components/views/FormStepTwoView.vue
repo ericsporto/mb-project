@@ -1,97 +1,86 @@
 <script setup>
-import {onBeforeMount} from 'vue'
+import { onBeforeMount } from 'vue';
 import ButtonComponent from '../ButtonComponent.vue';
 import HeaderComponent from '../HeaderComponent.vue';
 import InputComponent from '../InputComponent.vue';
-import {stepTwoLogic} from '../../composable/stepTwo/logic'
+import { stepTwoLogic } from '../../composable/stepTwo/logic';
 
-const {handleInputChange,
-    isLegalPerson,
-    isNormalPerson,
-    legalName,
-    socialName,
-    cpf,
-    cnpj,
-    birthDate,
-    birthOpened,
-    phoneLegal,
-    phoneSocial,
-    isLegalNameValid,
-    isSocialNameValid,
-    isCpfValid,
-    isCnpjValid,
-    isBirthDateValid,
-    isBirthOpenedValid,
-    isPhoneLegalValid,
-    isPhoneSocialValid} = stepTwoLogic()
+const {
+  handleInputChange,
+  isLegalPerson,
+  isNormalPerson,
+  legalName,
+  socialName,
+  cpf,
+  cnpj,
+  birthDate,
+  birthOpened,
+  phoneLegal,
+  phoneSocial,
+  isLegalNameValid,
+  isSocialNameValid,
+  isCpfValid,
+  isCnpjValid,
+  isBirthDateValid,
+  isBirthOpenedValid,
+  isPhoneLegalValid,
+  isPhoneSocialValid,
+} = stepTwoLogic();
 
 const emit = defineEmits(['stepChange', 'stepChangeBack']);
 
 onBeforeMount(() => {
-  legalName.value = localStorage.getItem('legalName') || ''
-  socialName.value = localStorage.getItem('socialName') || ''
-  cpf.value = localStorage.getItem('cpf') || ''
-  cnpj.value = localStorage.getItem('cnpj') || ''
-  birthDate.value = localStorage.getItem('birthDate') || ''
-  birthOpened.value = localStorage.getItem('birthOpened') || ''
-  phoneSocial.value = localStorage.getItem('phoneSocial') || ''
-  phoneLegal.value = localStorage.getItem('phoneLegal') || ''
-const isLegal = localStorage.getItem('isLegalPerson')
-if(isLegal === 'false'){
-  isLegalPerson.value = false
-  isNormalPerson.value = true
-} else {
-  isLegalPerson.value = true
-  isNormalPerson.value = false
-}
+  legalName.value = localStorage.getItem('legalName') || '';
+  socialName.value = localStorage.getItem('socialName') || '';
+  cpf.value = localStorage.getItem('cpf') || '';
+  cnpj.value = localStorage.getItem('cnpj') || '';
+  birthDate.value = localStorage.getItem('birthDate') || '';
+  birthOpened.value = localStorage.getItem('birthOpened') || '';
+  phoneSocial.value = localStorage.getItem('phoneSocial') || '';
+  phoneLegal.value = localStorage.getItem('phoneLegal') || '';
+  const isLegal = localStorage.getItem('isLegalPerson');
+  if (isLegal === 'false') {
+    isLegalPerson.value = false;
+    isNormalPerson.value = true;
+  } else {
+    isLegalPerson.value = true;
+    isNormalPerson.value = false;
+  }
 });
 
-const onSubmitLegal = async () => {
-    if (!legalName.value) {
-      isLegalNameValid.value = true;
-      return;
-    }
-    if (!cnpj.value) {
-      isCnpjValid.value = true;
-      return;
-    }
-    if (!birthOpened.value) {
-      isBirthOpenedValid.value = true;
-      return;
-    }
-    if(!phoneLegal.value){
-      isPhoneLegalValid.value = true
-      return
-    }
-  localStorage.setItem('legalName', legalName.value)
-  localStorage.setItem('cnpj', cnpj.value)
-  localStorage.setItem('birthOpened', birthOpened.value)
-  localStorage.setItem('phoneLegal', phoneLegal.value)
-  emit('stepChange');
-};
-
-const onSubmitNormal = async () => {
-    if (!socialName.value) {
-      isSocialNameValid.value = true;
-      return;
-    }
-    if (!cpf.value) {
-      isCpfValid.value = true;
-      return;
-    }
-    if (!birthDate.value) {
-      isBirthDateValid.value = true;
-      return;
-    }
-    if(!phoneSocial.value){
-    isPhoneSocialValid.value = true
-    return
+const onSubmit = async () => {
+  let requiredFields, requiredIndicators;
+  if (isLegalPerson.value) {
+    requiredFields = [legalName, cnpj, birthOpened, phoneLegal];
+    requiredIndicators = [
+      isLegalNameValid,
+      isCnpjValid,
+      isBirthOpenedValid,
+      isPhoneLegalValid,
+    ];
+  } else {
+    requiredFields = [socialName, cpf, birthDate, phoneSocial];
+    requiredIndicators = [
+      isSocialNameValid,
+      isCpfValid,
+      isBirthDateValid,
+      isPhoneSocialValid,
+    ];
   }
 
-  localStorage.setItem('socialName', socialName.value)
-  localStorage.setItem('cpf', cpf.value)
-  localStorage.setItem('birthDate', birthDate.value)
-  localStorage.setItem('phoneSocial', phoneSocial.value)
+  const invalidFieldIndex = requiredFields.findIndex((field) => !field.value);
+  if (invalidFieldIndex !== -1) {
+    requiredIndicators[invalidFieldIndex].value = true;
+    return;
+  }
+
+  const storageKeys = isLegalPerson.value
+    ? ['legalName', 'cnpj', 'birthOpened', 'phoneLegal']
+    : ['socialName', 'cpf', 'birthDate', 'phoneSocial'];
+  storageKeys.forEach((key, index) => {
+    localStorage.setItem(key, requiredFields[index].value);
+  });
+
   emit('stepChange');
 };
 </script>
@@ -111,10 +100,13 @@ const onSubmitNormal = async () => {
           :id="isLegalPerson ? 'legalName' : 'socialName'"
           @input="
             (event) =>
-              handleInputChange(event, isLegalPerson ? 'legalName' : 'socialName')
+              handleInputChange(
+                event,
+                isLegalPerson ? 'legalName' : 'socialName'
+              )
           "
           :value="isLegalPerson ? legalName : socialName"
-          alertMessage="This field is required."
+          :alertMessage="isLegalPerson ? 'Precisamos da razão social.' : 'Precisamos de um nome.'"
           :hasAlert="isLegalPerson ? isLegalNameValid : isSocialNameValid"
         />
         <InputComponent
@@ -126,7 +118,7 @@ const onSubmitNormal = async () => {
             (event) => handleInputChange(event, isLegalPerson ? 'cnpj' : 'cpf')
           "
           :value="isLegalPerson ? cnpj : cpf"
-          alertMessage="This field is required."
+          :alertMessage="isLegalPerson ? 'Precisamos de um CNPJ.' : 'Precisamos de um CPF.'"
           :hasAlert="isLegalPerson ? isCnpjValid : isCpfValid"
         />
         <InputComponent
@@ -142,7 +134,7 @@ const onSubmitNormal = async () => {
               )
           "
           :value="isLegalPerson ? birthOpened : birthDate"
-          alertMessage="This field is required."
+          :alertMessage="isLegalPerson ? 'Precisamos da data de abertura da empresa.' : 'Precisamos da data de nascimento.'"
           :hasAlert="isLegalPerson ? isBirthOpenedValid : isBirthDateValid"
         />
         <InputComponent
@@ -158,7 +150,7 @@ const onSubmitNormal = async () => {
               )
           "
           :value="isLegalPerson ? phoneLegal : phoneSocial"
-          alertMessage="This field is required."
+          :alertMessage="isLegalPerson ? 'Precisamos do telefone da empresa.' : 'Precisamos do telefone.'"
           :hasAlert="isLegalPerson ? isPhoneLegalValid : isPhoneSocialValid"
         />
       </div>
@@ -170,7 +162,7 @@ const onSubmitNormal = async () => {
           type="button"
         />
         <ButtonComponent
-          @click="isLegalPerson ? onSubmitLegal() : onSubmitNormal()"
+          @click="onSubmit"
           label="Continuar"
           variant="primary"
           type="button"

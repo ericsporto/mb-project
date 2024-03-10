@@ -59,7 +59,7 @@ const onSubmit = async () => {
       id="email"
       @input="handleInputChange"
       :value="email"
-      alertMessage="This field is required."
+      alertMessage="Precisamos de um e-mail."
       :hasAlert="isEmailValid"
     />
     <div class="checkbox-wrapper">
@@ -80,7 +80,7 @@ const onSubmit = async () => {
         @change="() => handleCheckboxChange('legal')"
       />
     </div>
-    <SpanComponent v-if="isCheckboxValid" message="This field is required." />
+    <SpanComponent v-if="isCheckboxValid" message="Precisamos de uma escolha." />
     <div class="button-container">
       <ButtonComponent
         @click="onSubmit"

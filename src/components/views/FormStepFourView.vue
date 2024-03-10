@@ -1,60 +1,62 @@
 <script setup>
-import {onBeforeMount} from 'vue'
+import { onBeforeMount } from 'vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 import InputComponent from '@/components/InputComponent.vue';
-import ButtonSpinnerComponent from '@/components/ButtonSpinnerComponent.vue'
-import {stepFourLogic} from '../../composable/stepFour/logic'
-import handleGetRegister from '@/requests/getRegister'
+import ButtonSpinnerComponent from '@/components/ButtonSpinnerComponent.vue';
+import { stepFourLogic } from '../../composable/stepFour/logic';
+import handleGetRegister from '@/requests/getRegister';
 import handleRegisterSocial from '@/requests/registerSocial';
 import handleRegisterLegal from '@/requests/registerLegal';
 
-const {handleInputChange,
-    isLegalPerson,
-    isNormalPerson,
-    legalName,
-    socialName,
-    cpf,
-    cnpj,
-    email,
-    password,
-    birthDate,
-    birthOpened,
-    phoneLegal,
-    phoneSocial,
-    isLegalNameValid,
-    isSocialNameValid,
-    isCpfValid,
-    isCnpjValid,
-    isBirthDateValid,
-    isBirthOpenedValid,
-    isPhoneLegalValid,
-    isPhoneSocialValid,
-    isPasswordValid,
-    isEmailValid,
-    isLoading,} = stepFourLogic()
+const {
+  handleInputChange,
+  isLegalPerson,
+  isNormalPerson,
+  legalName,
+  socialName,
+  cpf,
+  cnpj,
+  email,
+  password,
+  birthDate,
+  birthOpened,
+  phoneLegal,
+  phoneSocial,
+  isLegalNameValid,
+  isSocialNameValid,
+  isCpfValid,
+  isCnpjValid,
+  isBirthDateValid,
+  isBirthOpenedValid,
+  isPhoneLegalValid,
+  isPhoneSocialValid,
+  isPasswordValid,
+  isEmailValid,
+  isLoading,
+} = stepFourLogic();
 
 const emit = defineEmits(['stepChange', 'stepChangeBack']);
 
 onBeforeMount(() => {
-  password.value = localStorage.getItem('password') || ''
-  email.value = localStorage.getItem('email') || ''
-  legalName.value = localStorage.getItem('legalName') || ''
-  socialName.value = localStorage.getItem('socialName') || ''
-  cpf.value = localStorage.getItem('cpf') || ''
-  cnpj.value = localStorage.getItem('cnpj') || ''
-  birthDate.value = localStorage.getItem('birthDate') || ''
-  birthOpened.value = localStorage.getItem('birthOpened') || ''
-  phoneSocial.value = localStorage.getItem('phoneSocial') || ''
-  phoneLegal.value = localStorage.getItem('phoneLegal') || ''
-const isLegal = localStorage.getItem('isLegalPerson')
-if(isLegal === 'false'){
-  isLegalPerson.value = false
-  isNormalPerson.value = true
-} else {
-  isLegalPerson.value = true
-  isNormalPerson.value = false
-}
+  password.value = localStorage.getItem('password') || '';
+  email.value = localStorage.getItem('email') || '';
+  legalName.value = localStorage.getItem('legalName') || '';
+  socialName.value = localStorage.getItem('socialName') || '';
+  cpf.value = localStorage.getItem('cpf') || '';
+  cnpj.value = localStorage.getItem('cnpj') || '';
+  birthDate.value = localStorage.getItem('birthDate') || '';
+  birthOpened.value = localStorage.getItem('birthOpened') || '';
+  phoneSocial.value = localStorage.getItem('phoneSocial') || '';
+  phoneLegal.value = localStorage.getItem('phoneLegal') || '';
+  const isLegal = localStorage.getItem('isLegalPerson');
+  if (isLegal === 'false') {
+    isLegalPerson.value = false;
+    isNormalPerson.value = true;
+  } else {
+    isLegalPerson.value = true;
+    isNormalPerson.value = false;
+  }
 });
 
 const onSubmitLegal = async () => {
@@ -66,46 +68,46 @@ const onSubmitLegal = async () => {
     isPasswordValid.value = true;
     return;
   }
-    if (!legalName.value) {
-      isLegalNameValid.value = true;
-      return;
-    }
-    if (!cnpj.value) {
-      isCnpjValid.value = true;
-      return;
-    }
-    if (!birthOpened.value) {
-      isBirthOpenedValid.value = true;
-      return;
-    }
-    if(!phoneLegal.value){
-      isPhoneLegalValid.value = true
-      return
-    }
-    isLoading.value = true
-    isLoading.value = true
-    try{
-      const payload = {
-        email: email.value,
-        legal_name: legalName.value,
-        cnpj: cnpj.value,
-        birth_opened: birthOpened.value,
-        legal_phone: phoneLegal.value,
-        password: password.value,
-      };
+  if (!legalName.value) {
+    isLegalNameValid.value = true;
+    return;
+  }
+  if (!cnpj.value) {
+    isCnpjValid.value = true;
+    return;
+  }
+  if (!birthOpened.value) {
+    isBirthOpenedValid.value = true;
+    return;
+  }
+  if (!phoneLegal.value) {
+    isPhoneLegalValid.value = true;
+    return;
+  }
+  isLoading.value = true;
+  isLoading.value = true;
+  try {
+    const payload = {
+      email: email.value,
+      legal_name: legalName.value,
+      cnpj: cnpj.value,
+      birth_opened: birthOpened.value,
+      legal_phone: phoneLegal.value,
+      password: password.value,
+    };
 
-        const response = await handleRegisterLegal(payload);
-        if(response){
-          window.alert(response.message)
-          await handleGetRegister()
-          isLoading.value = false
-          localStorage.clear()
-          emit('stepChange')
-        }
-      }catch{
-        isLoading.value = false
-        window.alert('Erro ao efetuar cadastro. Tente novamente')
-        }
+    const response = await handleRegisterLegal(payload);
+    if (response) {
+      window.alert(response.message);
+      await handleGetRegister();
+      isLoading.value = false;
+      localStorage.clear();
+      emit('stepChange');
+    }
+  } catch {
+    isLoading.value = false;
+    window.alert('Erro ao efetuar cadastro. Tente novamente');
+  }
 };
 
 const onSubmitNormal = async () => {
@@ -117,44 +119,44 @@ const onSubmitNormal = async () => {
     isPasswordValid.value = true;
     return;
   }
-    if (!socialName.value) {
-      isSocialNameValid.value = true;
-      return;
-    }
-    if (!cpf.value) {
-      isCpfValid.value = true;
-      return;
-    }
-    if (!birthDate.value) {
-      isBirthDateValid.value = true;
-      return;
-    }
-    if(!phoneSocial.value){
-    isPhoneSocialValid.value = true
-    return
+  if (!socialName.value) {
+    isSocialNameValid.value = true;
+    return;
   }
-  isLoading.value = true
-  try{
-      const payload = {
-        email: email.value,
-        social_name: socialName.value,
-        cpf: cpf.value,
-        birth_date: birthDate.value,
-        social_phone: phoneSocial.value,
-        password: password.value
-      };
-        const response = await handleRegisterSocial(payload);
-        if(response){
-          window.alert(response.message)
-          await handleGetRegister()
-          isLoading.value = false
-          localStorage.clear()
-          emit('stepChange')
-        }
-      }catch(error){
-        isLoading.value = false
-        window.alert('Erro ao efetuar cadastro. Tente novamente')
-        }
+  if (!cpf.value) {
+    isCpfValid.value = true;
+    return;
+  }
+  if (!birthDate.value) {
+    isBirthDateValid.value = true;
+    return;
+  }
+  if (!phoneSocial.value) {
+    isPhoneSocialValid.value = true;
+    return;
+  }
+  isLoading.value = true;
+  try {
+    const payload = {
+      email: email.value,
+      social_name: socialName.value,
+      cpf: cpf.value,
+      birth_date: birthDate.value,
+      social_phone: phoneSocial.value,
+      password: password.value,
+    };
+    const response = await handleRegisterSocial(payload);
+    if (response) {
+      window.alert(response.message);
+      await handleGetRegister();
+      isLoading.value = false;
+      localStorage.clear();
+      emit('stepChange');
+    }
+  } catch (error) {
+    isLoading.value = false;
+    window.alert('Erro ao efetuar cadastro. Tente novamente');
+  }
 };
 </script>
 
@@ -170,7 +172,7 @@ const onSubmitNormal = async () => {
           id="email"
           @input="(event) => handleInputChange(event, 'email')"
           :value="email"
-          alertMessage="This field is required."
+          alertMessage="Precisamos de um e-mail."
           :hasAlert="isEmailValid"
         />
         <InputComponent
@@ -180,11 +182,18 @@ const onSubmitNormal = async () => {
           :id="isLegalPerson ? 'legalName' : 'socialName'"
           @input="
             (event) =>
-              handleInputChange(event, isLegalPerson ? 'legalName' : 'socialName')
+              handleInputChange(
+                event,
+                isLegalPerson ? 'legalName' : 'socialName'
+              )
           "
           :value="isLegalPerson ? legalName : socialName"
-          alertMessage="This field is required."
-          :hasAlert="isLegalPerson ? isSocialNameValid : isLegalNameValid"
+          :alertMessage="
+            isLegalPerson
+              ? 'Precisamos da razão social.'
+              : 'Precisamos de um nome.'
+          "
+          :hasAlert="isLegalPerson ? isLegalNameValid : isSocialNameValid"
         />
         <InputComponent
           :label="isLegalPerson ? 'CNPJ' : 'CPF'"
@@ -195,7 +204,9 @@ const onSubmitNormal = async () => {
             (event) => handleInputChange(event, isLegalPerson ? 'cnpj' : 'cpf')
           "
           :value="isLegalPerson ? cnpj : cpf"
-          alertMessage="This field is required."
+          :alertMessage="
+            isLegalPerson ? 'Precisamos de um CNPJ.' : 'Precisamos de um CPF.'
+          "
           :hasAlert="isLegalPerson ? isCnpjValid : isCpfValid"
         />
         <InputComponent
@@ -211,7 +222,11 @@ const onSubmitNormal = async () => {
               )
           "
           :value="isLegalPerson ? birthOpened : birthDate"
-          alertMessage="This field is required."
+          :alertMessage="
+            isLegalPerson
+              ? 'Precisamos da data de abertura da empresa.'
+              : 'Precisamos da data de nascimento.'
+          "
           :hasAlert="isLegalPerson ? isBirthOpenedValid : isBirthDateValid"
         />
         <InputComponent
@@ -227,7 +242,11 @@ const onSubmitNormal = async () => {
               )
           "
           :value="isLegalPerson ? phoneLegal : phoneSocial"
-          alertMessage="This field is required."
+          :alertMessage="
+            isLegalPerson
+              ? 'Precisamos do telefone da empresa.'
+              : 'Precisamos do telefone.'
+          "
           :hasAlert="isLegalPerson ? isPhoneLegalValid : isPhoneSocialValid"
         />
         <InputComponent
@@ -236,7 +255,7 @@ const onSubmitNormal = async () => {
           :required="false"
           id="password"
           @input="(event) => handleInputChange(event, 'password')"
-          :value="email"
+          :value="password"
           alertMessage="This field is required."
           :hasAlert="isPasswordValid"
         />
