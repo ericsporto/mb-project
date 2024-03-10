@@ -11,7 +11,7 @@
   height: 23px;
   position: relative;
   margin: 0 auto;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .spinner-inner {

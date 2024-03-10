@@ -1,10 +1,10 @@
 <script setup>
 import { onBeforeMount } from 'vue';
-import ButtonComponent from '../ButtonComponent.vue';
-import HeaderComponent from '../HeaderComponent.vue';
-import InputComponent from '../InputComponent.vue';
-import SpanComponent from '../SpanComponent.vue';
-import {stepOneLogic} from '../../composable/stepOne/logic';
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import HeaderComponent from '@/components/HeaderComponent.vue';
+import InputComponent from '@/components/InputComponent.vue';
+import SpanComponent from '@/components/SpanComponent.vue';
+import {stepOneLogic} from '@/composable/stepOne/logic';
 
 const {
   email,

@@ -1,9 +1,9 @@
 <script setup>
 import { onBeforeMount } from 'vue';
-import ButtonComponent from '../ButtonComponent.vue';
-import HeaderComponent from '../HeaderComponent.vue';
-import InputComponent from '../InputComponent.vue';
-import { stepTwoLogic } from '../../composable/stepTwo/logic';
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import HeaderComponent from '@/components/HeaderComponent.vue';
+import InputComponent from '@/components/InputComponent.vue';
+import { stepTwoLogic } from '@/composable/stepTwo/logic';
 
 const {
   handleInputChange,

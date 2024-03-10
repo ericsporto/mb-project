@@ -4,7 +4,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
 import HeaderComponent from '@/components/HeaderComponent.vue';
 import InputComponent from '@/components/InputComponent.vue';
 import ButtonSpinnerComponent from '@/components/ButtonSpinnerComponent.vue';
-import { stepFourLogic } from '../../composable/stepFour/logic';
+import { stepFourLogic } from '@/composable/stepFour/logic';
 import handleGetRegister from '@/requests/getRegister';
 import handleRegisterSocial from '@/requests/registerSocial';
 import handleRegisterLegal from '@/requests/registerLegal';
