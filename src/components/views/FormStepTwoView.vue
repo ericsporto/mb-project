@@ -96,7 +96,6 @@ const onSubmit = async () => {
         <InputComponent
           :label="isLegalPerson ? 'Razão social' : 'Nome'"
           type="text"
-          :required="false"
           :id="isLegalPerson ? 'legalName' : 'socialName'"
           @input="
             (event) =>
@@ -112,7 +111,6 @@ const onSubmit = async () => {
         <InputComponent
           :label="isLegalPerson ? 'CNPJ' : 'CPF'"
           type="number"
-          :required="false"
           id="cnpj-cpf"
           @input="
             (event) => handleInputChange(event, isLegalPerson ? 'cnpj' : 'cpf')
@@ -124,7 +122,6 @@ const onSubmit = async () => {
         <InputComponent
           :label="isLegalPerson ? 'Data de abertura' : 'Data de nascimento'"
           type="date"
-          :required="false"
           id="date"
           @input="
             (event) =>
@@ -140,7 +137,6 @@ const onSubmit = async () => {
         <InputComponent
           label="Telefone"
           type="number"
-          :required="false"
           id="phone"
           @input="
             (event) =>

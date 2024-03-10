@@ -59,104 +59,89 @@ onBeforeMount(() => {
   }
 });
 
-const onSubmitLegal = async () => {
-  if (!email.value) {
-    isEmailValid.value = true;
-    return;
+const onSubmit = async () => {
+  let requiredFields, requiredIndicators;
+  if (isLegalPerson.value) {
+    requiredFields = [
+      legalName,
+      cnpj,
+      birthOpened,
+      phoneLegal,
+      email,
+      password,
+    ];
+    requiredIndicators = [
+      isLegalNameValid,
+      isCnpjValid,
+      isBirthOpenedValid,
+      isPhoneLegalValid,
+      isEmailValid,
+      isPasswordValid,
+    ];
+  } else {
+    requiredFields = [socialName, cpf, birthDate, phoneSocial, email, password];
+    requiredIndicators = [
+      isSocialNameValid,
+      isCpfValid,
+      isBirthDateValid,
+      isPhoneSocialValid,
+      isEmailValid,
+      isPasswordValid,
+    ];
   }
-  if (!password.value) {
-    isPasswordValid.value = true;
-    return;
-  }
-  if (!legalName.value) {
-    isLegalNameValid.value = true;
-    return;
-  }
-  if (!cnpj.value) {
-    isCnpjValid.value = true;
-    return;
-  }
-  if (!birthOpened.value) {
-    isBirthOpenedValid.value = true;
-    return;
-  }
-  if (!phoneLegal.value) {
-    isPhoneLegalValid.value = true;
-    return;
-  }
-  isLoading.value = true;
-  isLoading.value = true;
-  try {
-    const payload = {
-      email: email.value,
-      legal_name: legalName.value,
-      cnpj: cnpj.value,
-      birth_opened: birthOpened.value,
-      legal_phone: phoneLegal.value,
-      password: password.value,
-    };
 
-    const response = await handleRegisterLegal(payload);
-    if (response) {
-      window.alert(response.message);
-      await handleGetRegister();
-      isLoading.value = false;
-      localStorage.clear();
-      emit('stepChange');
-    }
-  } catch {
-    isLoading.value = false;
-    window.alert('Erro ao efetuar cadastro. Tente novamente');
+  const invalidFieldIndex = requiredFields.findIndex((field) => !field.value);
+  if (invalidFieldIndex !== -1) {
+    requiredIndicators[invalidFieldIndex].value = true;
+    return;
   }
-};
 
-const onSubmitNormal = async () => {
-  if (!email.value) {
-    isEmailValid.value = true;
-    return;
-  }
-  if (!password.value) {
-    isPasswordValid.value = true;
-    return;
-  }
-  if (!socialName.value) {
-    isSocialNameValid.value = true;
-    return;
-  }
-  if (!cpf.value) {
-    isCpfValid.value = true;
-    return;
-  }
-  if (!birthDate.value) {
-    isBirthDateValid.value = true;
-    return;
-  }
-  if (!phoneSocial.value) {
-    isPhoneSocialValid.value = true;
-    return;
-  }
   isLoading.value = true;
-  try {
-    const payload = {
-      email: email.value,
-      social_name: socialName.value,
-      cpf: cpf.value,
-      birth_date: birthDate.value,
-      social_phone: phoneSocial.value,
-      password: password.value,
-    };
-    const response = await handleRegisterSocial(payload);
-    if (response) {
-      window.alert(response.message);
-      await handleGetRegister();
+
+  setTimeout(async () => {
+    try {
+      if (isLegalPerson.value) {
+        const payload = {
+          email: email.value,
+          legal_name: legalName.value,
+          cnpj: cnpj.value,
+          birth_opened: birthOpened.value,
+          legal_phone: phoneLegal.value,
+          password: password.value,
+        };
+
+        const response = await handleRegisterLegal(payload);
+        if (response) {
+          window.alert(response.message);
+          await handleGetRegister();
+          isLoading.value = false;
+        }
+      } else {
+        const payload = {
+          email: email.value,
+          social_name: socialName.value,
+          cpf: cpf.value,
+          birth_date: birthDate.value,
+          social_phone: phoneSocial.value,
+          password: password.value,
+        };
+        const response = await handleRegisterSocial(payload);
+        if (response) {
+          window.alert(response.message);
+          await handleGetRegister();
+          isLoading.value = false;
+        }
+      }
+    } catch {
       isLoading.value = false;
-      localStorage.clear();
-      emit('stepChange');
+      window.alert('Erro ao efetuar cadastro. Tente novamente');
     }
-  } catch (error) {
-    isLoading.value = false;
-    window.alert('Erro ao efetuar cadastro. Tente novamente');
-  }
+  }, 2000);
+
+  setTimeout(() => {
+    localStorage.clear();
+    emit('stepChange');
+  }, 2500);
 };
 </script>
 
@@ -168,7 +153,6 @@ const onSubmitNormal = async () => {
         <InputComponent
           label="Endereço de e-mail"
           type="text"
-          :required="false"
           id="email"
           @input="(event) => handleInputChange(event, 'email')"
           :value="email"
@@ -178,7 +162,6 @@ const onSubmitNormal = async () => {
         <InputComponent
           :label="isLegalPerson ? 'Razão social' : 'Nome'"
           type="text"
-          :required="false"
           :id="isLegalPerson ? 'legalName' : 'socialName'"
           @input="
             (event) =>
@@ -198,7 +181,6 @@ const onSubmitNormal = async () => {
         <InputComponent
           :label="isLegalPerson ? 'CNPJ' : 'CPF'"
           type="number"
-          :required="false"
           id="cnpj-cpf"
           @input="
             (event) => handleInputChange(event, isLegalPerson ? 'cnpj' : 'cpf')
@@ -212,7 +194,6 @@ const onSubmitNormal = async () => {
         <InputComponent
           :label="isLegalPerson ? 'Data de abertura' : 'Data de nascimento'"
           type="date"
-          :required="false"
           id="date"
           @input="
             (event) =>
@@ -232,7 +213,6 @@ const onSubmitNormal = async () => {
         <InputComponent
           label="Telefone"
           type="number"
-          :required="false"
           id="phone"
           @input="
             (event) =>
@@ -252,11 +232,10 @@ const onSubmitNormal = async () => {
         <InputComponent
           label="Sua senha"
           type="text"
-          :required="false"
           id="password"
           @input="(event) => handleInputChange(event, 'password')"
           :value="password"
-          alertMessage="This field is required."
+          alertMessage="Precisamos de uma senha."
           :hasAlert="isPasswordValid"
         />
       </div>
@@ -268,7 +247,6 @@ const onSubmitNormal = async () => {
           type="button"
         />
         <ButtonComponent
-          @click="isLegalPerson ? onSubmitLegal() : onSubmitNormal()"
           :label="isLoading ? '' : 'Cadastrar'"
           variant="primary"
           type="submit"

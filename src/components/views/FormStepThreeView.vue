@@ -33,7 +33,6 @@ const onSubmit = async () => {
       <InputComponent
         label="Sua senha"
         type="text"
-        :required="false"
         id="password"
         @input="handleInputChange"
         :value="password"

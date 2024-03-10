@@ -33,7 +33,7 @@ app.post('/registration/social', (req, res) => {
 
   registrationData = req.body;
 
-  res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
+  res.status(200).json({ message: 'Cadastro de Pessoa Física realizado com sucesso! Clique em OK para ver os dados na tela!' });
 });
 
 app.post('/registration/legal', (req, res) => {
@@ -54,7 +54,7 @@ app.post('/registration/legal', (req, res) => {
 
   registrationData = req.body;
 
-  res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
+  res.status(200).json({ message: 'Cadastro de Pessoa Jurídica realizado com sucesso! Clique em OK para ver os dados na tela!' });
 });
 
 app.get('/registration', (req, res) => {

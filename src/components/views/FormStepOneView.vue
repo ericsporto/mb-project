@@ -55,7 +55,6 @@ const onSubmit = async () => {
     <InputComponent
       label="Endereço de e-mail"
       type="email"
-      :required="false"
       id="email"
       @input="handleInputChange"
       :value="email"
@@ -66,7 +65,6 @@ const onSubmit = async () => {
       <InputComponent
         label="Pessoa física"
         type="checkbox"
-        :required="false"
         id="normal-person"
         :checked="normalPersonChecked"
         @change="() => handleCheckboxChange('normal')"
@@ -74,7 +72,6 @@ const onSubmit = async () => {
       <InputComponent
         label="Pessoa jurídica"
         type="checkbox"
-        :required="false"
         id="legal-person"
         :checked="legalPersonChecked"
         @change="() => handleCheckboxChange('legal')"
